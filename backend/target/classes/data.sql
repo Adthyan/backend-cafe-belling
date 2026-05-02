@@ -4,7 +4,7 @@
 -- To change defaults for new installs, edit the INSERT values below in source control.
 
 INSERT INTO shop_settings (id, merchant_vpa, merchant_name, currency)
-SELECT 1, 'yourshop@upi', 'South Indian Cafe', 'INR'
+SELECT 1, 'yourshop@upi', 'Ramanujam & Janagam Family Cafe', 'INR'
 WHERE NOT EXISTS (SELECT 1 FROM shop_settings WHERE id = 1);
 
 INSERT INTO menu_items (name, description, price, image_url, active, sort_order, created_at, updated_at)
