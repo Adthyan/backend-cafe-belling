@@ -1,0 +1,138 @@
+@if (loading) {
+  <p class="muted">Loading menu…</p>
+} @else if (error && menu.length === 0) {
+  <p class="error">{{ error }}</p>
+} @else {
+  <div class="pos-layout no-print">
+    <section class="menu-section">
+      <h1>Tap an item to add to cart</h1>
+      @if (error) {
+        <p class="error">{{ error }}</p>
+      }
+      <div class="menu-grid">
+        @for (item of menu; track item.id) {
+          <button type="button" class="menu-card" (click)="addToCart(item)">
+            <img [src]="imageSrc(item)" [alt]="item.name" width="160" height="160" />
+            <span class="name">{{ item.name }}</span>
+            <span class="price">₹{{ item.price | number: '1.2-2' }}</span>
+          </button>
+        }
+      </div>
+    </section>
+
+    <aside class="cart-panel">
+      <h2>Cart &amp; bill</h2>
+      @if ((cart.lines$ | async); as lines) {
+        @if (lines.length === 0) {
+          <p class="muted">Cart is empty.</p>
+        } @else {
+          <ul class="cart-lines">
+            @for (line of lines; track line.menuItem.id) {
+              <li>
+                <span class="line-name">{{ line.menuItem.name }}</span>
+                <span class="line-price">₹{{ line.menuItem.price | number: '1.2-2' }}</span>
+                <input
+                  type="number"
+                  min="1"
+                  class="qty"
+                  [ngModel]="line.quantity"
+                  (ngModelChange)="setQty(line.menuItem.id, $event)"
+                />
+              </li>
+            }
+          </ul>
+        }
+      }
+      <div class="totals">
+        <span>Subtotal</span>
+        <strong>₹{{ subtotal() | number: '1.2-2' }}</strong>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn secondary" (click)="clearCart()">Clear cart</button>
+        <button type="button" class="btn primary" (click)="checkoutAndPay()" [disabled]="checkoutBusy || cart.lines.length === 0">
+          {{ checkoutBusy ? 'Checking out…' : 'Checkout & pay (gateway QR)' }}
+        </button>
+      </div>
+      @if (lastReceipt) {
+        <button type="button" class="btn outline" (click)="printBill()">Print bill</button>
+      }
+    </aside>
+  </div>
+
+  @if (showPayPanel && lastReceipt) {
+    <div class="modal-backdrop no-print" (click)="closePayPanel()"></div>
+    <div class="modal no-print" role="dialog" aria-labelledby="pay-title" (click)="$event.stopPropagation()">
+      <h2 id="pay-title">Pay with UPI (gateway)</h2>
+      <p class="muted">Bill #{{ lastReceipt.saleId }} — ₹{{ lastReceipt.total | number: '1.2-2' }}</p>
+
+      @if (qrLoading) {
+        <p class="muted">Creating secure QR…</p>
+      }
+
+      @if (gatewayQrError) {
+        <p class="error">{{ gatewayQrError }}</p>
+        <button type="button" class="btn primary" (click)="retryGatewayQr()">Retry QR</button>
+      }
+
+      @if (paymentQr && !qrLoading) {
+        <div class="qr-wrap">
+          @if (paymentQr.qrImageUrl) {
+            <img [src]="paymentQr.qrImageUrl" alt="Payment QR code" width="260" height="260" />
+          } @else if (paymentQr.qrContent) {
+            <qrcode [qrdata]="paymentQr.qrContent" [width]="220" [errorCorrectionLevel]="'M'" [margin]="2"></qrcode>
+          }
+        </div>
+        <p class="status-line">
+          <strong>Status:</strong>
+          {{ paymentStatus?.paymentStatus ?? paymentQr.status }} — waiting for automatic confirmation
+        </p>
+        @if (gatewayTxnRef()) {
+          <p class="muted small-ref">Ref: {{ gatewayTxnRef() }}</p>
+        }
+      }
+
+      <p class="hint muted no-print">When the customer pays, this screen updates and the bill prints automatically. Configure Razorpay webhooks for production.</p>
+
+      <div class="pay-actions">
+        <button type="button" class="btn secondary" (click)="closePayPanel()">Close</button>
+      </div>
+    </div>
+  }
+
+  @if (toast) {
+    <div class="toast no-print" role="status">{{ toast }}</div>
+  }
+
+  @if (lastReceipt) {
+    <div id="print-receipt" class="print-only">
+      <div class="receipt">
+        <h1>{{ receiptShopName() }}</h1>
+        <p class="receipt-meta">Bill #{{ lastReceipt.saleId }}</p>
+        <p class="receipt-meta">{{ lastReceipt.soldAt | date: 'medium' }}</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Line</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (l of lastReceipt.lines; track l.menuItemId) {
+              <tr>
+                <td>{{ l.name }}</td>
+                <td>{{ l.quantity }}</td>
+                <td>₹{{ l.lineTotal | number: '1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <p class="receipt-total">Total: ₹{{ lastReceipt.total | number: '1.2-2' }}</p>
+        @if (gatewayTxnRef()) {
+          <p class="receipt-meta">Paid via gateway — {{ gatewayTxnRef() }}</p>
+        }
+        <p class="receipt-note">Thank you.</p>
+      </div>
+    </div>
+  }
+}

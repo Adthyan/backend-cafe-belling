@@ -1,0 +1,58 @@
+<h1>Gateway UPI Payment (Razorpay)</h1>
+
+<div class="card form-card">
+  <label>
+    Customer name
+    <input [(ngModel)]="customerName" placeholder="Customer name" />
+  </label>
+  <label>
+    Amount
+    <input [(ngModel)]="amount" type="number" min="1" step="0.01" />
+  </label>
+  <label>
+    Description
+    <input [(ngModel)]="description" placeholder="Room / bill details" />
+  </label>
+  <label>
+    Currency
+    <input [(ngModel)]="currency" placeholder="INR" />
+  </label>
+  <button class="btn primary" (click)="createInvoiceAndQr()" [disabled]="loading">
+    {{ loading ? 'Creating...' : 'Generate QR' }}
+  </button>
+</div>
+
+@if (error) {
+  <p class="error">{{ error }}</p>
+}
+@if (notification) {
+  <p class="ok">{{ notification }}</p>
+}
+
+@if (invoice) {
+  <div class="card">
+    <h3>Invoice</h3>
+    <p><strong>No:</strong> {{ invoice.invoiceNumber }}</p>
+    <p><strong>Customer:</strong> {{ invoice.customerName }}</p>
+    <p><strong>Amount:</strong> {{ invoice.amount }} {{ invoice.currency }}</p>
+  </div>
+}
+
+@if (paymentQr) {
+  <div class="card">
+    <h3>Scan UPI QR</h3>
+    @if (paymentQr.qrImageUrl) {
+      <img [src]="paymentQr.qrImageUrl" alt="UPI QR code" width="260" />
+    } @else if (paymentQr.qrContent) {
+      <qrcode [qrdata]="paymentQr.qrContent" [width]="240"></qrcode>
+    }
+    <p><strong>Status:</strong> {{ paymentStatus?.paymentStatus ?? paymentQr.status }}</p>
+    @if (paymentStatus?.gatewayPaymentId) {
+      <p><strong>Gateway Txn:</strong> {{ paymentStatus?.gatewayPaymentId }}</p>
+    }
+    @if (paymentStatus?.failureReason) {
+      <p class="error"><strong>Reason:</strong> {{ paymentStatus?.failureReason }}</p>
+    }
+  </div>
+}
+

@@ -1,0 +1,29 @@
+<h1>UPI / shop settings</h1>
+<p class="hint">Merchant VPA and name are embedded in the Pay QR after checkout.</p>
+
+@if (loading) {
+  <p>Loading…</p>
+} @else {
+  <form class="card" (ngSubmit)="save()">
+    <label>
+      Merchant VPA (UPI ID)
+      <input [(ngModel)]="model.merchantVpa" name="vpa" required />
+    </label>
+    <label>
+      Merchant display name
+      <input [(ngModel)]="model.merchantName" name="name" required />
+    </label>
+    <label>
+      Currency
+      <input [(ngModel)]="model.currency" name="currency" maxlength="8" />
+    </label>
+    <button type="submit" class="btn primary" [disabled]="saving">Save</button>
+  </form>
+}
+
+@if (message) {
+  <p class="ok">{{ message }}</p>
+}
+@if (error) {
+  <p class="error">{{ error }}</p>
+}

@@ -1,0 +1,78 @@
+<h1>Manage menu</h1>
+<p class="hint">Uses HTTP Basic: admin / admin (same as Spring Security).</p>
+
+@if (loading) {
+  <p>Loading…</p>
+} @else if (error && items.length === 0) {
+  <p class="error">{{ error }}</p>
+  <button type="button" class="btn" (click)="reload()">Retry</button>
+} @else {
+  @if (error) {
+    <p class="error">{{ error }}</p>
+  }
+
+  <div class="grid">
+    <form class="card" (ngSubmit)="save()">
+      <h2>{{ editing ? 'Edit item' : 'New item' }}</h2>
+      <label>
+        Name
+        <input name="name" [(ngModel)]="form.name" required />
+      </label>
+      <label>
+        Description
+        <input name="description" [(ngModel)]="form.description" />
+      </label>
+      <label>
+        Price (₹)
+        <input name="price" type="number" step="0.01" min="0.01" [(ngModel)]="form.price" required />
+      </label>
+      <label>
+        Image URL (e.g. /menu/idly.svg)
+        <input name="imageUrl" [(ngModel)]="form.imageUrl" required />
+      </label>
+      <label>
+        Sort order
+        <input name="sortOrder" type="number" [(ngModel)]="form.sortOrder" />
+      </label>
+      <label class="check">
+        <input name="active" type="checkbox" [(ngModel)]="form.active" />
+        Active (shown on POS)
+      </label>
+      <div class="form-actions">
+        <button type="submit" class="btn primary" [disabled]="saving">Save</button>
+        @if (editing) {
+          <button type="button" class="btn secondary" (click)="newItem()">Cancel edit</button>
+        }
+      </div>
+    </form>
+
+    <div class="card table-card">
+      <h2>All items</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Active</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of items; track item.id) {
+              <tr>
+                <td>{{ item.name }}</td>
+                <td>₹{{ item.price | number: '1.2-2' }}</td>
+                <td>{{ item.active ? 'Yes' : 'No' }}</td>
+                <td class="actions">
+                  <button type="button" class="link" (click)="edit(item)">Edit</button>
+                  <button type="button" class="link danger" (click)="delete(item)">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}

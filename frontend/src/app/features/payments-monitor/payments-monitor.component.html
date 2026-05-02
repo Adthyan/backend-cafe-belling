@@ -1,0 +1,45 @@
+<h1>Payments monitor</h1>
+<p class="hint">Auto refresh every 5 seconds.</p>
+
+@if (loading) {
+  <p>Loading...</p>
+} @else if (error) {
+  <p class="error">{{ error }}</p>
+} @else if (rows.length === 0) {
+  <p>No payments yet.</p>
+} @else {
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Invoice</th>
+          <th>Customer</th>
+          <th>Amount</th>
+          <th>Payment status</th>
+          <th>Invoice status</th>
+          <th>Gateway txn</th>
+          <th>Updated</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows; track row.paymentId) {
+          <tr [class]="rowClass(row.paymentStatus)">
+            <td>{{ row.invoiceNumber }}</td>
+            <td>{{ row.customerName }}</td>
+            <td>{{ row.amount }} {{ row.currency }}</td>
+            <td>{{ row.paymentStatus }}</td>
+            <td>{{ row.invoiceStatus }}</td>
+            <td>{{ row.gatewayPaymentId || '-' }}</td>
+            <td>{{ row.updatedAt | date: 'short' }}</td>
+          </tr>
+          @if (row.failureReason) {
+            <tr class="reason">
+              <td colspan="7">Reason: {{ row.failureReason }}</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+}
+

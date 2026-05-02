@@ -1,0 +1,48 @@
+h1 {
+  margin-top: 0;
+}
+
+.hint {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.card {
+  max-width: 420px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+input {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+}
+
+.btn.primary {
+  padding: 0.55rem 1.25rem;
+  border-radius: 8px;
+  border: none;
+  background: #f59e0b;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ok {
+  color: #15803d;
+}
+
+.error {
+  color: #b91c1c;
+}

@@ -1,0 +1,68 @@
+h1 {
+  margin-top: 0;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+input {
+  padding: 0.45rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  width: 7rem;
+}
+
+.btn.primary {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background: #f59e0b;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.error {
+  color: #b91c1c;
+}

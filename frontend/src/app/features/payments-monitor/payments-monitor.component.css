@@ -1,0 +1,46 @@
+.hint {
+  color: #64748b;
+}
+
+.table-wrap {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.5rem;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.55rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+tr.pending td {
+  background: #fff7ed;
+}
+
+tr.paid td {
+  background: #ecfdf5;
+}
+
+tr.failed td {
+  background: #fef2f2;
+}
+
+tr.reason td {
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
+.error {
+  color: #b91c1c;
+}
+
