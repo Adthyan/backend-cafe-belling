@@ -8,7 +8,7 @@ SELECT 1, 'yourshop@upi', 'Ramanujam & Janagam Family Cafe', 'INR'
 WHERE NOT EXISTS (SELECT 1 FROM shop_settings WHERE id = 1);
 
 INSERT INTO menu_items (name, description, price, image_url, active, sort_order, created_at, updated_at)
-SELECT 'Idly', 'Steamed rice cakes (2 pcs)', 1.50, '/menu/idlly.jpg', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+SELECT 'Idly', 'Steamed rice cakes (2 pcs)', 1.50, '/menu/while.jpg', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 WHERE NOT EXISTS (SELECT 1 FROM menu_items WHERE name = 'Idly');
 
 INSERT INTO menu_items (name, description, price, image_url, active, sort_order, created_at, updated_at)
