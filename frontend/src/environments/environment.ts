@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://localhost:8080',
+  apiBaseUrl: 'https://backend-cafe-belling-1.onrender.com',
   adminUser: 'admin',
   adminPassword: 'admin',
 };
