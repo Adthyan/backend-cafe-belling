@@ -1,6 +1,7 @@
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../../../environments/environment';
 import { MenuItem, MenuItemWrite } from '../../models/api.types';
 import { MenuService } from '../../services/menu.service';
 
@@ -14,6 +15,7 @@ import { MenuService } from '../../services/menu.service';
 export class AdminMenuComponent implements OnInit {
   items: MenuItem[] = [];
   error = '';
+  successMessage = '';
   loading = true;
   saving = false;
 
@@ -26,15 +28,27 @@ export class AdminMenuComponent implements OnInit {
     this.reload();
   }
 
+  imageSrc(url: string): string {
+    if (url.startsWith('http')) return url;
+    return `${environment.apiBaseUrl}${url}`;
+  }
+
   emptyForm(): MenuItemWrite {
     return {
       name: '',
       description: '',
       price: 0,
-      imageUrl: '/menu/idly.svg',
+      imageUrl: '/menu/Idlly.jpg',
       active: true,
       sortOrder: 0,
     };
+  }
+
+  showSuccess(msg: string): void {
+    this.successMessage = msg;
+    setTimeout(() => {
+      this.successMessage = '';
+    }, 3000);
   }
 
   reload(): void {
@@ -49,7 +63,7 @@ export class AdminMenuComponent implements OnInit {
         this.error =
           e.status === 401
             ? 'Unauthorized. Use admin / admin in the API (HTTP Basic) — check browser network tab.'
-            : 'Could not load menu items.';
+            : 'Could not load menu items. Check if backend is running.';
         this.loading = false;
       },
     });
@@ -75,6 +89,7 @@ export class AdminMenuComponent implements OnInit {
   save(): void {
     this.saving = true;
     this.error = '';
+    this.successMessage = '';
     const req =
       this.editing == null
         ? this.menuService.create(this.form)
@@ -82,6 +97,7 @@ export class AdminMenuComponent implements OnInit {
     req.subscribe({
       next: () => {
         this.saving = false;
+        this.showSuccess(this.editing ? 'Item updated successfully!' : 'Item created successfully!');
         this.newItem();
         this.reload();
       },
@@ -93,11 +109,16 @@ export class AdminMenuComponent implements OnInit {
   }
 
   delete(item: MenuItem): void {
-    if (!confirm(`Delete ${item.name}?`)) {
+    if (!confirm(`Delete ${item.name}? This action cannot be undone.`)) {
       return;
     }
+    this.error = '';
+    this.successMessage = '';
     this.menuService.delete(item.id).subscribe({
-      next: () => this.reload(),
+      next: () => {
+        this.showSuccess('Item deleted successfully!');
+        this.reload();
+      },
       error: (e) => {
         this.error = e.error?.error ?? 'Delete failed.';
       },
