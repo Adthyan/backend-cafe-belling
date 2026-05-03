@@ -11,11 +11,36 @@
       }
       <div class="menu-grid">
         @for (item of menu; track item.id) {
-          <button type="button" class="menu-card" (click)="addToCart(item)">
+          <div class="menu-card">
             <img [src]="imageSrc(item)" [alt]="item.name" width="160" height="160" />
             <span class="name">{{ item.name }}</span>
             <span class="price">₹{{ item.price | number: '1.2-2' }}</span>
-          </button>
+            <div class="menu-actions">
+              <button type="button" class="menu-add-btn" (click)="addToCart(item)">Add</button>
+              @if (qtyInCart(item.id) > 0) {
+                <div class="qty-controls compact">
+                  <button
+                    type="button"
+                    class="qty-btn"
+                    (click)="decrementQty(item.id, qtyInCart(item.id))"
+                    [disabled]="qtyInCart(item.id) <= 0"
+                    aria-label="Decrease quantity"
+                  >
+                    -
+                  </button>
+                  <span class="menu-qty">{{ qtyInCart(item.id) }}</span>
+                  <button
+                    type="button"
+                    class="qty-btn"
+                    (click)="incrementQty(item.id, qtyInCart(item.id))"
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
         }
       </div>
     </section>
@@ -31,13 +56,32 @@
               <li>
                 <span class="line-name">{{ line.menuItem.name }}</span>
                 <span class="line-price">₹{{ line.menuItem.price | number: '1.2-2' }}</span>
-                <input
-                  type="number"
-                  min="1"
-                  class="qty"
-                  [ngModel]="line.quantity"
-                  (ngModelChange)="setQty(line.menuItem.id, $event)"
-                />
+                <div class="qty-controls">
+                  <button
+                    type="button"
+                    class="qty-btn"
+                    (click)="decrementQty(line.menuItem.id, line.quantity)"
+                    [disabled]="line.quantity <= 0"
+                    aria-label="Decrease quantity"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    min="1"
+                    class="qty"
+                    [ngModel]="line.quantity"
+                    (ngModelChange)="setQty(line.menuItem.id, $event)"
+                  />
+                  <button
+                    type="button"
+                    class="qty-btn"
+                    (click)="incrementQty(line.menuItem.id, line.quantity)"
+                    aria-label="Increase quantity"
+                  >
+                    +
+                  </button>
+                </div>
               </li>
             }
           </ul>

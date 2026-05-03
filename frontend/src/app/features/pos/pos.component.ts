@@ -85,6 +85,11 @@ export class PosComponent implements OnInit, OnDestroy {
     this.cart.addItem(item);
   }
 
+  qtyInCart(menuItemId: number): number {
+    const line = this.cart.lines.find((l) => l.menuItem.id === menuItemId);
+    return line?.quantity ?? 0;
+  }
+
   clearCart(): void {
     this.cart.clear();
     this.error = '';
@@ -96,6 +101,17 @@ export class PosComponent implements OnInit, OnDestroy {
       return;
     }
     this.cart.setQuantity(menuItemId, n);
+  }
+
+  incrementQty(menuItemId: number, currentQty: number): void {
+    this.cart.setQuantity(menuItemId, currentQty + 1);
+  }
+
+  decrementQty(menuItemId: number, currentQty: number): void {
+    if (currentQty <= 0) {
+      return;
+    }
+    this.cart.setQuantity(menuItemId, currentQty - 1);
   }
 
   subtotal(): number {

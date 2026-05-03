@@ -44,6 +44,31 @@
   font-size: 0.9rem;
 }
 
+.menu-actions {
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.menu-add-btn {
+  border: 1px solid #f59e0b;
+  background: #fff7ed;
+  color: #9a3412;
+  border-radius: 8px;
+  padding: 0.22rem 0.6rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.menu-qty {
+  min-width: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  color: #1f2937;
+}
+
 .pos-layout {
   display: grid;
   grid-template-columns: 1fr minmax(280px, 340px);
@@ -88,10 +113,38 @@
 }
 
 .qty {
-  width: 3.5rem;
+  width: 3rem;
   padding: 0.25rem;
   border-radius: 6px;
   border: 1px solid #cbd5e1;
+  text-align: center;
+}
+
+.qty-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.qty-controls.compact {
+  gap: 0.25rem;
+}
+
+.qty-btn {
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  color: #1f2937;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.qty-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
 }
 
 .totals {
