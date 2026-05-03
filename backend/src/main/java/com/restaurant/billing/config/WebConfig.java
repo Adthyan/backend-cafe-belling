@@ -13,13 +13,18 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        java.util.List<String> patterns = new java.util.ArrayList<>();
+        if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
+            patterns.addAll(java.util.Arrays.asList(allowedOrigins.split(",")));
+        }
+        patterns.addAll(java.util.Arrays.asList(
+                "http://localhost:*",
+                "http://127.0.0.1:*",
+                "https://*.vercel.app"
+        ));
+
         registry.addMapping("/api/**")
-                .allowedOriginPatterns(allowedOrigins.split(","))
-                .allowedOriginPatterns(
-                        "http://localhost:*",
-                        "http://127.0.0.1:*",
-                        "https://backend-cafe-belling-q25ovj41s-adthyans-projects.vercel.app"
-                )
+                .allowedOriginPatterns(patterns.toArray(new String[0]))
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
