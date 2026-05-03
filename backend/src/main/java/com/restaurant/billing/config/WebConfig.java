@@ -14,10 +14,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                // In dev, Angular may run on a random localhost port.
-                // This keeps it flexible while still restricting to localhost.
                 .allowedOriginPatterns(allowedOrigins.split(","))
-                .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*")
+                .allowedOriginPatterns(
+                        "http://localhost:*",
+                        "http://127.0.0.1:*",
+                        "https://backend-cafe-belling-q25ovj41s-adthyans-projects.vercel.app"
+                )
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
